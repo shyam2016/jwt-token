@@ -34,23 +34,12 @@ public class JwtToken {
                 .withIssuedAt(new Date())
                 .withExpiresAt(calendarExpirationTime.getTime())
                 .withSubject("Subject is Hello")
+                .withClaim("sample claim","sample value")
                 .sign(algorithm);
 
     }
 
     public Jws<Claims> decodeToken(String token) throws UnsupportedEncodingException {
-        DecodedJWT decodedJWT = JWT.decode(token);
-        String header = decodedJWT.getHeader();
-        JwtTokenResponse build = JwtTokenResponse.builder()
-                .algorithm(decodedJWT.getAlgorithm())
-                .audience(decodedJWT.getAudience())
-                .claims(decodedJWT.getClaims())
-                .issuer(decodedJWT.getIssuer())
-                .issuedAt(decodedJWT.getIssuedAt())
-                .expiresAt(decodedJWT.getExpiresAt())
-                .subject(decodedJWT.getSubject())
-                .header(decodedJWT.getHeader())
-                .build();
         Jws<Claims> claimsJws = Jwts.parser()
                 .setSigningKey("secret".getBytes("UTF-8"))
                 .parseClaimsJws(token);
