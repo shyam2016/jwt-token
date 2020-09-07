@@ -1,11 +1,14 @@
 package com.example.demo;
 
 import com.example.demo.token.JwtToken;
-import com.example.demo.token.JwtTokenResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/demo")
@@ -28,7 +31,7 @@ public class DemoController {
     }
 
     @PostMapping("/token/decode")
-    public JwtTokenResponse returnDecodedJwtToken(@RequestHeader("JWT") String jwt){
+    public Jws<Claims> returnDecodedJwtToken(@RequestHeader("JWT") String jwt) throws UnsupportedEncodingException {
         return tokenService.decodeToken(jwt);
     }
 

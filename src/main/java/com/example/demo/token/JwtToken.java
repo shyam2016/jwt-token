@@ -2,10 +2,13 @@ package com.example.demo.token;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Service
@@ -35,7 +38,7 @@ public class JwtToken {
 
     }
 
-    public JwtTokenResponse decodeToken(String token){
+    public Jws<Claims> decodeToken(String token) throws UnsupportedEncodingException {
         DecodedJWT decodedJWT = JWT.decode(token);
         String header = decodedJWT.getHeader();
         JwtTokenResponse build = JwtTokenResponse.builder()
@@ -48,6 +51,9 @@ public class JwtToken {
                 .subject(decodedJWT.getSubject())
                 .header(decodedJWT.getHeader())
                 .build();
-        return build;
+        Jws<Claims> claimsJws = Jwts.parser()
+                .setSigningKey("secret".getBytes("UTF-8"))
+                .parseClaimsJws(token);
+        return claimsJws;
     }
 }
